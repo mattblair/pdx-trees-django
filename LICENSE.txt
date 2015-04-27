@@ -1,9 +1,3 @@
-# PDX Trees (2015 Revival)
-
-## More info coming soon...
-
-## License
-
 The MIT License (MIT)
 
 Copyright (c) 2015 Elsewise LLC
