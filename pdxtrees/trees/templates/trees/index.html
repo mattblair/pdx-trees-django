@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block page_title %}PDX Trees 2015{% endblock %}
+
+{% block page_head %}
+	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<p><a href="{% url 'trees:genus_search_url' 'Pinus' %}">By Genus</a> | <a href="{% url 'trees:year_list_url' %}">By Year</a></p>
+
+<div id="map"></div>
+
+{% endblock %}
+
+{% block after_jquery %}
+	<script src="{% static 'js/leaflet.js' %}"></script>
+{% endblock %}
+
+{% block document_ready_javascript %}
+
+	var map = L.map('map').setView([45.52, -122.65], 11);
+	
+	L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+		attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+	}).addTo(map);
+	
+	function onEachFeature(feature, layer) {
+		layer.bindPopup(feature.properties.title);
+	}
+	
+	trees = {{geojson|safe}}
+	
+	L.geoJson(trees, {
+
+		onEachFeature: onEachFeature,
+
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, {
+				radius: 8,
+				fillColor: "#33cc00",
+				color: "#000",
+				weight: 1,
+				opacity: 1,
+				fillOpacity: 0.8
+			});
+		}
+	}).addTo(map);
+	
+{% endblock %}

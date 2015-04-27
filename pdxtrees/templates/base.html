@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block page_title %}{% endblock %} &mdash; PDX Trees</title>
+	
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+	
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	{% block page_head %}{% endblock %}
+  </head>
+
+<body>
+	
+	<div class="container-fluid">
+			
+		<div class="page-header">
+		  <h1><a href="{% url 'trees:index_url' %}">PDX Trees</a> <small>Exploring Portland&apos;s Heritage Trees</small></h1>
+		</div>
+		
+		<h2>{% block title %}{% endblock %}</h2>
+		
+		{% block content %}{% endblock %}
+
+	</div>
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	
+	{% block after_jquery %}{% endblock %}
+	
+	<script>
+		$(document).ready(function(){
+			{% block document_ready_javascript %}{% endblock %}
+		});
+	</script>
+	
+</body>
+</html>

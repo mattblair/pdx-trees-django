@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Tree Detail{% endblock %}
+
+{% block content %}
+
+{% if tree %}
+
+<p>Tree #{{tree.city_tree_id}}: {{tree.common_name}} ({{tree.scientific_name}})</p>
+
+{% else %}
+
+<p>No tree found with that id.</p>
+
+{% endif %}
+
+{% endblock %}
