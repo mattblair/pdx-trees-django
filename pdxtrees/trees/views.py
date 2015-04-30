@@ -39,6 +39,24 @@ def missing_list(request):
     return render(request, 'trees/missing_list.html', context)
 
 
+def genus_detail(request, genus_slug):
+    """
+    Returns genus, to display genus-specific info, and trees of that genus.
+    """
+    
+    genus = get_object_or_404(TreeGenus, slug=genus_slug)
+    
+    genus_menu_list = TreeGenus.objects.filter(display_in_menu=True)
+    
+    context = {
+        "genus": genus,
+        "genus_menu_list": genus_menu_list,
+        "geojson": trees_as_geojson(genus.trees.all())
+    }
+    return render(request, 'trees/genus_detail.html', context)
+
+
+# DEPRECATED
 def genus_search(request, genus_fragment):
     """
     Runs a wildcard search on scientific name, starting with genus_frament

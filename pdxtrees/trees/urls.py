@@ -15,8 +15,9 @@ urlpatterns = [
     
     # /missing/
     url(r'^missing/$', views.missing_list, name='missing_list_url'),
-    # /genus/<fragment>/
-    url(r'^genus/(?P<genus_fragment>[\w-]+)/$', views.genus_search, name='genus_search_url'),
+    
+    # /genus/<genus_slug/
+    url(r'^genus/(?P<genus_slug>[\w-]+)/$', views.genus_detail, name='genus_detail_url'),
 
     # /year/
     url(r'^year/$', views.year_list, name='year_list_url'),

@@ -1,21 +1,39 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block page_title %}PDX Trees 2015{% endblock %}
-
 {% block page_head %}
 	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
 {% endblock %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Genus Detail{% endblock %}
 
 {% block content %}
+<p>Other Common Genera in the Collection (navigation)</p>
 
-<p><a href="{% url 'trees:genus_detail_url' 'pinus' %}">Genus Example</a> | <a href="{% url 'trees:year_list_url' %}">By Year</a></p>
+<ul>
+	{% for g in genus_menu_list %}
+		<li><a href="{{g.get_absolute_url}}">{{g.common_name}}</a></li>
+	{% endfor %}
+</ul>
+	
+{% if genus %}
 
-<div id="map"></div>
+	<h2>{{genus.common_name}}</h2>
+	<h3 class="scientific-name">{{genus.genus_name}}</h3>
+	<h4>{{genus.trees.count}} Trees Found</h4>
+	
+	<div id="map"></div>
+	
+	{% for t in genus.trees.all %}
+		<p><a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a></p>
+	{% endfor %}
+	
+{% else %}
+	<p>No trees found with genus: {{genus.genus_name}}</p>
+{% endif %}
 
 {% endblock %}
+
 
 {% block after_jquery %}
 	<script src="{% static 'js/leaflet.js' %}"></script>
@@ -52,3 +70,4 @@
 	}).addTo(map);
 	
 {% endblock %}
+
