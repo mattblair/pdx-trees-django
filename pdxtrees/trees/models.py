@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.urlresolvers import reverse
 
 # may be reused for several models
 CITY_DATASOURCE_TYPE = 'c'
@@ -30,6 +30,9 @@ class TreeGenus(models.Model):
     
     def __unicode__(self):
         return self.genus_name
+    
+    def get_absolute_url(self):
+        return reverse('trees:genus_detail_url', args=[self.slug])
     
     class Meta:
         ordering = ['genus_name'] # or display_order
