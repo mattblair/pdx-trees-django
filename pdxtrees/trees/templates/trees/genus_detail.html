@@ -8,28 +8,41 @@
 {% block title %}Genus Detail{% endblock %}
 
 {% block content %}
-<p>Other Common Genera in the Collection (navigation)</p>
 
-<ul>
-	{% for g in genus_menu_list %}
-		<li><a href="{{g.get_absolute_url}}">{{g.common_name}}</a></li>
-	{% endfor %}
-</ul>
-	
+<div class="pdxt-unified-row">
+	<div class="pdxt-single-column">
+		
+		<p>Other Common Genera in the Collection (navigation)</p>
+
+		<ul class="list-inline">
+			{% for g in genus_menu_list %}
+				<li><a href="{{g.get_absolute_url}}">{{g.common_name}}</a></li>
+			{% endfor %}
+		</ul>
+		
+	</div>
+</div>
 {% if genus %}
-
-	<h2>{{genus.common_name}}</h2>
-	<h3 class="scientific-name">{{genus.genus_name}}</h3>
-	<h4>{{genus.trees.count}} Trees Found</h4>
-	
-	<div id="map"></div>
-	
-	{% for t in genus.trees.all %}
-		<p><a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a></p>
-	{% endfor %}
+	<div class="pdxt-split-row">
+		<div class="pdxt-left-column">
+			<div id="map"></div>
+		</div>
+		<div class="pdxt-right-column">
+			<h2>{{genus.common_name}}</h2>
+			<h3 class="scientific-name">{{genus.genus_name}}</h3>
+			<h4>{{genus.trees.count}} Trees Found</h4>
+			{% for t in genus.trees.all %}
+				<p><a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a></p>
+			{% endfor %}
+		</div>
+	</div>
 	
 {% else %}
-	<p>No trees found with genus: {{genus.genus_name}}</p>
+	<div class="pdxt-unified-row">
+		<div class="pdxt-single-column">
+			<p>No trees found with genus: {{genus.genus_name}}</p>
+		</div>
+	</div>
 {% endif %}
 
 {% endblock %}
