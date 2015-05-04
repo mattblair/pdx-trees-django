@@ -104,11 +104,8 @@ class NotableTree(models.Model):
     designation = models.CharField(max_length=1, choices=DESIGNATION_TYPE_CHOICES, default=UNDEFINED_DESIGNATION_TYPE)
     initial_datasource = models.CharField(max_length=1, choices=TREE_DATASOURCE_TYPE_CHOICES, default=UNDEFINED_DATASOURCE_TYPE) 
     
-    # <designation_character>-<source_id>, e.g.
-    # "h-103" for Heritage Tree #103
-    # NOTE: null=True is temporary. Change to required + unique after
-    # initial migration and population of this field.
-    unified_identifier = models.CharField(max_length=10, null=True)
+    # <designation>-<source_id>, e.g. "h-103" for Heritage Tree #103
+    unified_identifier = models.CharField(max_length=10, unique=True)
     
     # client apps would map these keys to filenames with a dictionary, etc.
     HERITAGE_TREE_ICON_TYPE = 'h'
