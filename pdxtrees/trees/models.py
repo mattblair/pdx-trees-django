@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 
-# may be reused for several models
+# these may be reused for several models
 CITY_DATASOURCE_TYPE = 'c'
 STATE_DATASOURCE_TYPE = 's'
 EWA_DATASOURCE_TYPE = 'e'
@@ -14,6 +14,19 @@ TREE_DATASOURCE_TYPE_CHOICES = (
     (EWA_DATASOURCE_TYPE, 'Elsewise'),
     (FAN_DATASOURCE_TYPE, 'Fan'),
     (UNDEFINED_DATASOURCE_TYPE, 'Undefined or Other'),
+)
+
+
+PENDING_REVIEW_STATUS_TYPE = 'p'
+APPROVED_REVIEW_STATUS_TYPE = 'a'
+REJECTED_REVIEW_STATUS_TYPE = 'r'
+TESTING_REVIEW_STATUS_TYPE = 't'
+
+REVIEW_STATUS_TYPE_CHOICES = (
+    (PENDING_REVIEW_STATUS_TYPE, 'Pending'),
+    (APPROVED_REVIEW_STATUS_TYPE, 'Approved'),
+    (REJECTED_REVIEW_STATUS_TYPE, 'Rejected'),
+    (TESTING_REVIEW_STATUS_TYPE, 'Testing Only'),
 )
 
 
@@ -91,6 +104,11 @@ class NotableTree(models.Model):
     designation = models.CharField(max_length=1, choices=DESIGNATION_TYPE_CHOICES, default=UNDEFINED_DESIGNATION_TYPE)
     initial_datasource = models.CharField(max_length=1, choices=TREE_DATASOURCE_TYPE_CHOICES, default=UNDEFINED_DATASOURCE_TYPE) 
     
+    # <designation_character>-<source_id>, e.g.
+    # "h-103" for Heritage Tree #103
+    # NOTE: null=True is temporary. Change to required + unique after
+    # initial migration and population of this field.
+    unified_identifier = models.CharField(max_length=10, null=True)
     
     # client apps would map these keys to filenames with a dictionary, etc.
     HERITAGE_TREE_ICON_TYPE = 'h'
@@ -123,18 +141,69 @@ class NotableTree(models.Model):
     
     def __unicode__(self):
         """
-        NOTE: city_tree_id will not be a good representation field if the
-        project expands beyond official heritage trees.
+        Customize this, based on designation?
         """
-        return "Tree #%s" % str(self.city_tree_id)
+        return "Tree %s" % str(self.unified_identifier)
     
     class Meta:
-        ordering = ['city_tree_id']
+        ordering = ['unified_identifier']
+
+
+class TreePhoto(models.Model):
+    """
+    Fan-submitted tree photos
+    """
+    
+    # May be temporarily undefined if submitted_tree_id 
+    # can not be resolved to an existing notable tree object.
+    RelatedTree = models.ForeignKey(NotableTree, related_name="photographed_trees", null=True, blank=True, related_query_name="photographed_tree", on_delete=models.PROTECT)
+    
+    # information from the submitter:
+    submitted_image = models.ImageField(upload_to="submitted_photos/%Y/%m/%d", blank=True, null=True)
+    # if this is an integer, assume it's a City of Portland
+    # Heritage Tree. Otherwise, use 
+    submitted_tree_id = models.IntegerField(null=True, blank=True)
+    
+    submitted_caption = models.TextField(blank=True)
+    submitted_name = models.CharField(max_length=100, blank=True)
+    submitted_email = models.CharField(max_length=200, blank=True)
+    submitted_url = models.CharField(max_length=200, blank=True)
+    submitted_date = models.DateTimeField(blank=False)
+    submitted_user_agent = models.CharField(max_length=255, blank=True)
+    
+    # if retrievable from image, could be used to verify proxmity
+    submitted_latitude = models.DecimalField(blank=True, max_digits=9, decimal_places=6)
+    submitted_longitude = models.DecimalField(blank=True, max_digits=9, decimal_places=6)
+    
+    # moderation:
+    review_status = models.CharField(max_length=10, choices=REVIEW_STATUS_TYPE_CHOICES, default=PENDING_REVIEW_STATUS_TYPE, blank=False)
+    review_notes = models.TextField(blank=True)
+    reviewed_date = models.DateTimeField(blank=False)
+    
+    # for publicly available images only:
+    approved_image_filename = models.CharField(max_length=150, blank=True)
+    approved_photograher_name = models.CharField(max_length=100, blank=True)
+    # truncated/edited?
+    approved_caption = models.TextField(blank=True)
+    
+    # old CouchDB uuid of photographed tree from v1.0 of the project
+    legacy_uuid = models.CharField(max_length=64, blank=True)
+    
+    created_date = models.DateTimeField(auto_now_add=True)
+    mod_date = models.DateTimeField('last modified', auto_now=True)
+    
+    
+    def __unicode__(self):
+        """
+        Will this every be important? Include tree ID?
+        """
+        return "Tree Image #%s" % str(self.id)
+    
+    class Meta:
+        ordering = ['created_date']
 
 
 # Future Models:
-
-# TreePhoto model (adapt from 1.0)
 
 # Submission model
 
