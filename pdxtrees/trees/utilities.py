@@ -1,11 +1,13 @@
 import os
 import json
+import csv # for photo import
 
 from django.db import transaction
 from django.core.exceptions import ValidationError
 
 
-from models import NotableTree, TreeGenus, CITY_DATASOURCE_TYPE
+from models import NotableTree, TreeGenus, CITY_DATASOURCE_TYPE, TreePhoto
+
 
 # to serialize from a queryset:
 #from django.core import serializers
@@ -271,7 +273,8 @@ def populate_ghost_trees():
             nt.save()
 
 
-def import_v1_photos(photo_csv_path):
+@transaction.atomic
+def import_v1_photos():
     """
     This method is a one-time import of photos from v1.0.
     
@@ -280,28 +283,77 @@ def import_v1_photos(photo_csv_path):
     """
     
     photo_data_filename = "pdx-trees-photos-moderated-150504.csv"
-    
     private_data_dir = "/Users/matt/Dropbox/appWorkingNotes/pdxTrees/privateData"
+    photo_data_path = os.path.join(private_data_dir, photo_data_filename)
     
-    # skip if it's a test photo
+    photo_data_v1 = csv.DictReader(open(photo_data_path, 'rb'),delimiter=",")
     
-    # handling for flagged/banned photos?
-    
-    
-    # for each valid photo:
-    
-    # extract photo name by removing prefix, set as approved_name if approved
-    
-    # find related tree based on city id
-    
-    # try to lat/long values?
-    
-    # map review_status values:
-    # original: pending, approved, flagged, banned, testing
-    # new: p, a, r, t
-    
-    # save
-    
+    for p in photo_data_v1:
+        
+        #print "Photo id: %s of tree %s is %s" % (p["id"], p["related_tree_id"], p["review_status"])
+        
+        # find related tree based on city id
+        try:
+            rt = NotableTree.objects.get(city_tree_id=int(p["related_tree_id"]))
+        except DoesNotExist:
+            # if it can't find an existing tree, log an error and continue
+            print "WARNING: Could not find matching tree!"
+            continue
+        
+        tp = TreePhoto()
+        
+        tp.related_tree = rt
+        tp.submitted_tree_id = p["related_tree_id"]
+        
+        # these can all be blank
+        tp.submitted_caption = p["caption"]
+        tp.submitted_name = p["submitter_name"]
+        tp.submitted_email = p["submitter_email"]
+        #tp.submitted_url -- always blank in the source data
+        tp.submitted_user_agent = p["submitter_user_agent"]
+        
+        # this is required:
+        tp.submitted_date = p["date_taken"]
+        
+        # read from the image file? Maybe later.
+        tp.submitted_latitude = 0.0
+        tp.submitted_longitude = 0.0
+        
+        # extract photo name by removing prefix: photologue/photos/
+        photo_file = p["image"].replace('photologue/photos/','')
+        original_review_status = p["review_status"]
+        
+        # map review_status values:
+        # original: pending, approved, flagged, banned, testing
+        # new: p, a, r, t
+        
+        status_mapping = {
+            "pending" : "p",
+            "approved" : "a",
+            "flagged" : "r",
+            "banned" : "r",
+            "testing" : "t"
+        }
+        
+        tp.review_status = status_mapping[original_review_status]
+        
+        # special handling for flagged/banned photos:
+        # put photo name in review notes, not in approved field
+        if p["review_status"] in ["flagged", "banned"]:
+            tp.review_notes = "Photo (%s) was %s" % (photo_file, p["review_status"])
+        
+        # required -- but v1.0 of the site did not log review dates
+        tp.reviewed_date = p["date_taken"]
+        
+        # copy data to public fields, if approved or for testing
+        if tp.review_status in ["a", "t"]:
+            tp.approved_image_filename = photo_file
+            tp.approved_submitter_name = p["submitter_name"]
+            tp.approved_caption = p["caption"]
+        
+        tp.legacy_uuid = p["related_tree_couch_id"]
+        
+        tp.save()
 
 
 def diff_with_geojson(geojson_path, persist_data=False):
