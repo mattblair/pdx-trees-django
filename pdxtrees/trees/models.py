@@ -195,7 +195,7 @@ class TreePhoto(models.Model):
     
     # for publicly available images only:
     approved_image_filename = models.CharField(max_length=150, blank=True)
-    approved_photograher_name = models.CharField(max_length=100, blank=True)
+    approved_submitter_name = models.CharField(max_length=100, blank=True)
     # truncated/edited?
     approved_caption = models.TextField(blank=True)
     
