@@ -62,9 +62,9 @@ class NotableTree(models.Model):
     Fields from the city
     """
     # what is this? Just the primary key from their data?
-    city_object_id = models.FloatField(null=True)
+    city_object_id = models.FloatField(null=True, blank=True)
     # this is a float in their shapefile
-    city_tree_id = models.IntegerField(null=True)
+    city_tree_id = models.IntegerField(null=True, blank=True)
     # status in the city is always "Heritage" as of April 2015
     city_status = models.CharField(max_length=20, default="None")
     scientific_name = models.CharField(max_length=100)
@@ -136,6 +136,20 @@ class NotableTree(models.Model):
     mod_date = models.DateTimeField('last modified', auto_now=True)
     
     
+    def save(self, *args, **kwargs):
+        
+        if not self.unified_identifier:
+            
+            print "Setting unified identifier"
+            if self.city_tree_id:
+                self.unified_identifier = "%s-%s" % (self.designation, str(self.city_tree_id))
+            else:
+                # TODO: add error-handling, or add a uuid
+                print "Can't determine a unified_identifier because no id has been specified."
+                return
+                
+        super(NotableTree, self).save(*args, **kwargs)
+    
     def __unicode__(self):
         """
         Customize this, based on designation?
@@ -156,9 +170,11 @@ class TreePhoto(models.Model):
     RelatedTree = models.ForeignKey(NotableTree, related_name="photographed_trees", null=True, blank=True, related_query_name="photographed_tree", on_delete=models.PROTECT)
     
     # information from the submitter:
+    
+    # this may be null for legacy submissions 
     submitted_image = models.ImageField(upload_to="submitted_photos/%Y/%m/%d", blank=True, null=True)
     # if this is an integer, assume it's a City of Portland
-    # Heritage Tree. Otherwise, use 
+    # Heritage Tree.
     submitted_tree_id = models.IntegerField(null=True, blank=True)
     
     submitted_caption = models.TextField(blank=True)
