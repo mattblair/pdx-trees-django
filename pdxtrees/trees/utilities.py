@@ -1,6 +1,10 @@
 import os
 import json
 
+from django.db import transaction
+from django.core.exceptions import ValidationError
+
+
 from models import NotableTree, TreeGenus, CITY_DATASOURCE_TYPE
 
 # to serialize from a queryset:
@@ -120,6 +124,184 @@ def load_initial_data():
             
     else:
         print "Unexpected GeoJSON type: %s" % geojson_data['type']
+
+
+@transaction.atomic
+def populate_ghost_trees():
+    """
+    Create placeholder records for all missing heritage trees.
+    
+    First pass: populate with details from 2010, where available.
+    Second pass: just create dummy records for those which remain.
+    Note: This will only be used via the shell after initial population 
+    of the database.
+    """
+    
+    missing_in_2015 = [13, 28, 29, 42, 50, 59, 65, 72, 92, 93, 94, 95, 96, 99, 114, 118, 123, 131, 138, 142, 166, 215, 227, 228, 230, 232, 234, 267]
+    
+    original_json_filename = "heritage-tree-details-100917-pp.json"
+    
+    # relative dir is: ../../data
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    
+    old_json_path = os.path.join(project_root, 'data', original_json_filename)
+    
+    with open(old_json_path, 'r') as infile:
+        data_from_2010 = json.load(infile)
+    
+    for tree in data_from_2010:
+        
+        # see if the city id is in the missing list and not db
+        missing_id = int(tree["treeid"])
+        mt = NotableTree.objects.filter(city_tree_id=missing_id)
+        
+        if missing_id in missing_in_2015 and len(mt) == 0:
+            
+            print "Making ghost record for %s based on 2010 data." % tree["treeid"]
+            
+            nt = NotableTree()
+            
+            nt.city_object_id = tree["objectid"]
+            nt.city_tree_id = int(tree["treeid"])
+            nt.city_status = tree["status"]
+            nt.scientific_name = tree["scientific"]
+            nt.common_name = tree["common_nam"]
+            
+            si = tree["stateid"]
+            if si:
+                nt.state_id = si
+            else:
+                nt.state_id = "Unknown"
+                
+            ca = tree["address"]
+            if ca:
+                nt.address = ca
+            else:
+                nt.address = "Unknown"
+                
+            nt.height = tree["height"]
+            nt.spread = tree["spread"]
+            nt.circumference = tree["circumfere"]
+            nt.diameter = tree["diameter"]
+            nt.year_designated = tree["year"]
+            
+            own = tree["owner"]
+            if own:
+                nt.owner = own
+            else:
+                nt.owner = "Unknown"
+            
+            cn = tree["notes"]
+            if cn:
+                nt.city_notes = cn
+            
+            nt.longitude = tree["geometry"]["coordinates"][0]
+            nt.latitude = tree["geometry"]["coordinates"][1]
+            
+            gn = nt.scientific_name.split(' ')[0]
+            
+            g = TreeGenus.objects.filter(genus_name=gn)
+            
+            if not g:
+                print "Making genus with name %s" % gn
+                
+                g = TreeGenus()
+                g.genus_name = gn
+                g.slug = gn.lower()
+                g.save()
+                
+                nt.genus = g
+                
+            else:
+                nt.genus = g[0]
+                
+            
+            # override defaults
+            nt.designation = NotableTree.HERITAGE_TREE_DESIGNATION_TYPE
+            nt.initial_datasource = CITY_DATASOURCE_TYPE
+            
+            # specific to ghost tree status:
+            nt.display_icon = NotableTree.GHOST_TREE_ICON_TYPE
+            nt.deceased = True
+            
+            """
+            try:
+                nt.full_clean()
+            except ValidationError as e:
+                print e
+            """
+            nt.save()
+    
+    # re-iterate the ghost tree list, create dummy records for any 
+    # which still aren't found.
+    # Max photo from v1.0 is for tree with id #297
+    
+    print "Starting second pass..."
+    
+    for tid in missing_in_2015:
+        
+        mt = NotableTree.objects.filter(city_tree_id=tid)
+        
+        if len(mt) > 0:
+            print "Missing Tree %s Already Created" % str(tid)
+        else: 
+            print "Creating Placeholder for Missing Heritage Tree %s" % str(tid)
+            
+            # if not found, post a dummy record
+            nt = NotableTree()
+            
+            nt.city_tree_id = tid
+            nt.city_status = "Unknown"
+            nt.scientific_name = "Unknown"
+            nt.common_name = "Unknown"
+            nt.state_id = "Unknown"
+            nt.address = "Unknown"
+            nt.owner = "Unknown"
+            nt.latitude = 0.0
+            nt.longitude = 0.0
+            nt.designation = NotableTree.HERITAGE_TREE_DESIGNATION_TYPE
+            
+            # create a dummy genus? Probably not.
+            
+            # specific to ghost tree status:
+            nt.display_icon = NotableTree.GHOST_TREE_ICON_TYPE
+            nt.deceased = True
+            nt.internal_notes = "This number was skipped in the city's heritage tree listings. No further information is available."
+            
+            nt.save()
+
+
+def import_v1_photos(photo_csv_path):
+    """
+    This method is a one-time import of photos from v1.0.
+    
+    NOTE: Do NOT commit photo data to git. It contains private info,
+    such as email addresses.
+    """
+    
+    photo_data_filename = "pdx-trees-photos-moderated-150504.csv"
+    
+    private_data_dir = "/Users/matt/Dropbox/appWorkingNotes/pdxTrees/privateData"
+    
+    # skip if it's a test photo
+    
+    # handling for flagged/banned photos?
+    
+    
+    # for each valid photo:
+    
+    # extract photo name by removing prefix, set as approved_name if approved
+    
+    # find related tree based on city id
+    
+    # try to lat/long values?
+    
+    # map review_status values:
+    # original: pending, approved, flagged, banned, testing
+    # new: p, a, r, t
+    
+    # save
+    
 
 
 def diff_with_geojson(geojson_path, persist_data=False):
