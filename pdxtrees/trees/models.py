@@ -167,7 +167,7 @@ class TreePhoto(models.Model):
     
     # May be temporarily undefined if submitted_tree_id 
     # can not be resolved to an existing notable tree object.
-    RelatedTree = models.ForeignKey(NotableTree, related_name="photographed_trees", null=True, blank=True, related_query_name="photographed_tree", on_delete=models.PROTECT)
+    related_tree = models.ForeignKey(NotableTree, related_name="photographed_trees", null=True, blank=True, related_query_name="photographed_tree", on_delete=models.PROTECT)
     
     # information from the submitter:
     
