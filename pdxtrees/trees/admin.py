@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import NotableTree, TreeGenus
+from models import NotableTree, TreeGenus, TreePhoto
 
 
 class NotableTreeAdmin(admin.ModelAdmin):
@@ -69,3 +69,49 @@ class TreeGenusAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TreeGenus, TreeGenusAdmin)
+
+
+class TreePhotoAdmin(admin.ModelAdmin):
+    
+    list_display = ('related_tree', 'submitted_date', 'review_status')
+    list_filter = ['review_status']
+    readonly_fields = ['created_date', 'mod_date',
+        'submitted_caption', 'submitted_name', 'submitted_email',
+        'submitted_tree_id', 'submitted_date', 'submitted_url',
+        'submitted_user_agent', 'submitted_image',
+        'submitted_latitude', 'submitted_longitude',
+        'related_tree', 'legacy_uuid'
+    ]
+    
+    fieldsets = [
+            ('Submitted', {
+                'fields': [
+                    ('submitted_caption', 'submitted_name', 'submitted_email'),
+                    ('submitted_tree_id', 'submitted_date', 'submitted_url'),
+                    ('submitted_user_agent', 'submitted_image'),
+                    ('submitted_latitude', 'submitted_longitude')
+                ]
+            }),
+            ('Moderation', {
+                'fields': [
+                    ('review_status', 'reviewed_date'),
+                    'review_notes'
+                ]
+            }),
+            ('Public', {
+                'fields': [
+                    'approved_image_filename',
+                    'approved_submitter_name',
+                    'approved_caption'
+                ]
+            }),
+            ('Metadata', {
+                'fields': [
+                    ('created_date', 'mod_date'),
+                    ('related_tree', 'legacy_uuid')
+                ]
+            })
+    ]
+
+
+admin.site.register(TreePhoto, TreePhotoAdmin)
