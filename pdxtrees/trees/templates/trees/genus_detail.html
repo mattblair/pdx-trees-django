@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block page_title %}
+	{% if genus %}
+		Genus: {{genus.genus_name}} 
+	{% else %}
+		Unknown Genus
+	{% endif %}
+{% endblock %}
+
 {% block page_head %}
 	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
 {% endblock %}
-
-{% block title %}Genus Detail{% endblock %}
 
 {% block content %}
 
 <div class="pdxt-unified-row">
 	<div class="pdxt-single-column">
+		
+		<h2>Genus Detail</h2>
 		
 		<p>Other Common Genera in the Collection (navigation)</p>
 

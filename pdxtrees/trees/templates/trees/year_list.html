@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block page_title %}Heritage Trees By Year Designated{% endblock %}
-{% block title %}Heritage Trees By Year Designated{% endblock %}
 
 {% block content %}
 
 {% if trees_by_year %}
+	
+	<h2>Heritage Trees By Year Designated</h2>
 	
 	{% for y in trees_by_year %}
 		<p><a href="{% url 'trees:year_detail_url' y.year %}">{{y.year}}</a>: {{y.tree_count}}</p>

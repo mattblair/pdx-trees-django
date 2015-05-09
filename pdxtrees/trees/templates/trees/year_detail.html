@@ -7,25 +7,25 @@
 	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
 {% endblock %}
 
-{% block title %}Heritage Trees Designated in {{year}}{% endblock %}
-
 {% block content %}
 
-{% if trees_in_year %}
+	<h2>Heritage Trees Designated in {{year}}</h2>
 	
-	<div id="map"></div>
+	{% if trees_in_year %}
 	
-	<h3>{{trees_in_year.count}} trees:</h3>
+		<div id="map"></div>
 	
-	{% for t in trees_in_year %}
-		<p><a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a></p>
-	{% endfor %}
+		<h3>{{trees_in_year.count}} trees:</h3>
 	
-	{{geojson}}
+		{% for t in trees_in_year %}
+			<p><a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a></p>
+		{% endfor %}
 	
-{% else %}
-	<p>No trees found in {{year}}.</p>
-{% endif %}
+		{{geojson}}
+	
+	{% else %}
+		<p>No trees found in {{year}}.</p>
+	{% endif %}
 
 {% endblock %}
 

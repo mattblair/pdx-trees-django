@@ -5,7 +5,13 @@
 	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
 {% endblock %}
 
-{% block title %}Search By Genus{% endblock %}
+{% block page_title %}
+	{% if trees_in_genus %}
+		Search By Genus
+	{% else %}
+		Unknown Genus
+	{% endif %}
+{% endblock %}
 
 {% block content %}
 <p>Select a genus:</p>
@@ -14,6 +20,8 @@
 		<a href="{% url 'trees:genus_search_url' k %}">{{v}}</a> | 
 	{% endfor %}
 </p>
+
+<h2>Search By Genus</h2>
 
 {% if trees_in_genus %}
 	
