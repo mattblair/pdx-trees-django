@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 
+
 # these may be reused for several models
 CITY_DATASOURCE_TYPE = 'c'
 STATE_DATASOURCE_TYPE = 's'
@@ -209,6 +210,15 @@ class TreePhoto(models.Model):
     
     created_date = models.DateTimeField(auto_now_add=True)
     mod_date = models.DateTimeField('last modified', auto_now=True)
+    
+    
+    def save(self, *args, **kwargs):
+        
+        super(TreePhoto, self).save(*args, **kwargs)
+        
+        # run this *after* saving:
+        from trees.utilities import update_public_photo_count_for_tree
+        update_public_photo_count_for_tree(self.related_tree)
     
     
     def __unicode__(self):
