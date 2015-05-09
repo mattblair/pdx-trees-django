@@ -217,6 +217,55 @@ class TreePhoto(models.Model):
         ordering = ['-display_order','submitted_date']
 
 
+class PhotoFlag(models.Model):
+    """
+    Allow anonymous viewers to flag photos.
+    
+    Since these photos are moderated, this will probably be
+    photos of the wrong tree, or confusing comment, etc.
+    """
+
+    UNDEFINED_PHOTO_FLAG_TYPE = 0
+    BAD_TREE_PHOTO_FLAG_TYPE = 1
+    BAD_COMMENT_PHOTO_FLAG_TYPE = 2
+
+    PHOTO_FLAG_TYPE_CHOICES = (
+        (UNDEFINED_PHOTO_FLAG_TYPE, 'Other'),
+        (BAD_TREE_PHOTO_FLAG_TYPE, 'Incorrect Tree'),
+        (BAD_COMMENT_PHOTO_FLAG_TYPE, 'Incorrect Comment'),
+    )
+
+
+    PENDING_FLAG_STATUS = 'p'
+    CONFIRMED_FLAG_STATUS = 'c'
+    REJECTED_FLAG_STATUS = 'r'
+
+    PHOTO_FLAG_STATUS_CHOICES = (
+        (PENDING_FLAG_STATUS, 'Pending'),
+        (CONFIRMED_FLAG_STATUS, 'Confirmed'),
+        (REJECTED_FLAG_STATUS, 'Rejected'),
+    )
+
+
+    flagged_photo = models.ForeignKey(TreePhoto, related_name="flagged_photos", related_query_name="flagged_photo", on_delete=models.PROTECT)
+    flag_type = models.IntegerField(choices=PHOTO_FLAG_TYPE_CHOICES, default=UNDEFINED_PHOTO_FLAG_TYPE)
+    complaint = models.TextField(blank=False)
+    flag_date = models.DateTimeField(auto_now_add=True)
+
+    reviewed = models.BooleanField(default=False)
+    review_date = models.DateTimeField(blank=True, null=True)
+    review_action = models.CharField(max_length=1, choices=PHOTO_FLAG_STATUS_CHOICES, default=PENDING_FLAG_STATUS)
+    review_notes = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return str(self.flag_date)
+
+    class Meta:
+        ordering = ['flag_date']
+        verbose_name_plural = "submitted Photo Flags"
+
+
+
 # Future Models:
 
 # Submission model
