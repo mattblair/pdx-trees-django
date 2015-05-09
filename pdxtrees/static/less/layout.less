@@ -14,6 +14,22 @@
   }
 }
 
+.pdxt-sidebar-row {
+    .make-row();
+      .pdxt-content-column {
+          .make-xs-column(12);
+          .make-sm-column(6);
+          .make-md-column(9);
+          .make-lg-column(8);
+      }
+      .pdxt-sidebar-column {
+          .make-xs-column(12);
+          .make-sm-column(6);
+          .make-md-column(3);
+          .make-lg-column(4);
+      }
+}
+
 .pdxt-split-row {
   .make-row();
   .pdxt-left-column {
@@ -32,6 +48,16 @@
   }
 }
 
+.pdxt-photo-row {
+  .make-row();
+  .pdxt-photo-column {
+      .make-xs-column(12);
+      .make-sm-column(4);
+      .make-md-column(3);
+      .make-lg-column(2);
+  }
+}
+
 .btn {
     margin: 5px 5px 5px 0px;
 }
@@ -41,22 +67,27 @@
 }
 
 .tree-photo {
-    width: 320px;
+    //width: 300px;
     margin-bottom: 10px;
-    @media(min-width: @screen-tablet) {
-        width: 500px;
-    }
+    width: 100%;
 }
 
 .tree-metadata {
     background-color: @pdxt-tan;
-    padding: 5px;
+    margin-top: 15px;
+    padding: 10px;
     width: 100%;
+    
+    @media(min-width: @screen-tablet) {
+        margin-top: 25px;
+    }
 }
 
 .ghost-tree-section {
-    width: 250px;
+    width: 100%;
+    color: #fff;
     background-color: #666;
+    padding: 10px;
 }
 
 #map { 
@@ -73,9 +104,9 @@
     // temporary bg color, just for layout testing
     background-color: @pdxt-mocha;
     height: 200px;
-    width: 200px;
+    width: 300px;
     @media(min-width: @screen-tablet) {
         height: 300px;
-        width: 400px;
+        width: 100%;
     }
 }

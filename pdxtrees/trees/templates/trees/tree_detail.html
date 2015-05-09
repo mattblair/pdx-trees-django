@@ -1,63 +1,96 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-{% if tree %}
-	About This Tree
-{% else %}
-	Tree Not Found
-{% endif %}
+{% block page_title %}
+	{% if tree %}
+		A {{tree.common_name}}
+	{% else %}
+		Tree Not Found
+	{% endif %}
 {% endblock %}
 
 {% block content %}
 
 {% if tree %}
 	
-	<div class="pdxt-split-row">
-		<div class="pdxt-left-column">
+	<div class="pdxt-unified-row">
+		<div class="pdxt-single-column">
 			<h4>Tree #{{tree.city_tree_id}}</h4>
+			
+		</div>
+	</div>
 	
-			<h2>{{tree.common_name}}</h2>
-	
-			<h3 class="scientific-name">{{tree.scientific_name}}</h3>
-	
+	<div class="pdxt-sidebar-row">
+		<div class="pdxt-content-column">
+			
+			<h2 class="tree-detail-common-name">{{tree.common_name}}</h2>
+			<h3 class="tree-detail-scientific-name scientific-name">{{tree.scientific_name}}</h3>
 			<h4>Genus: <a href="{{tree.genus.get_absolute_url}}">{{tree.genus.common_name}} <span class="scientific-name">({{tree.genus.genus_name}})</span></a></h4>
-	
+
 			{% if tree.city_status == "Heritage" %}
 				<p>Designated by the City of Portland as a Heritage Tree in {{tree.year_designated}}</p>
 			{% endif %}
+		</div>
+		<div class="pdxt-sidebar-column">
+			<div class="tree-metadata">
+				<p>Height: {{tree.height}} feet</p>
+				<p>Spread: {{tree.spread}} feet</p>
+				<p>Circumference: {{tree.circumference}} feet</p>
+				<p>Diameter: {{tree.diameter}} inches</p>
+			</div>
+		</div>
+	</div>
+		
 	
-			<p><strong>Address:</strong> {{tree.address}}</p>
+	{% if tree.deceased %}
+		<div class="pdxt-unified-row">
+			<div class="pdxt-single-column">
+				<div class="ghost-tree-section">
+					<h4>Ghost Tree</h4>
+					{% comment %}
+					<p>Removed in {{tree.year_deceased}}</p>
+					<p>{{tree.cause_of_death}}</p>	
+					{% endcomment %}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	
+	{% if tree.public_photos %}
+		<div class="pdxt-photo-row">
+			{% for p in tree.public_photos.all %}
+				<div class="pdxt-photo-column">
+					<img class="tree-photo"  src="http://www.pdxtrees.org/media/photologue/photos/{{p.approved_image_filename}}" />
+				</div>
+			{% endfor %}
+			
+			<div class="pdxt-photo-column">
+				<p><a href="">Add a photo...</a></p>
+			</div>
+		</div>
+	{% else %}
+		<div class="pdxt-unified-row">
+			<div class="pdxt-single-column">
+				<h3>No Photos Available.</h3>
+				<p>Add to the collection... (coming soon)</p>
+			</div>
+		</div>
+	{% endif %}
+	
+	<div class="pdxt-split-row">
+		<div class="pdxt-left-column">
 			
 			<div id="tree-map"></div>
 			
 		</div>
 		<div class="pdxt-right-column">
 			
-			{% if tree.deceased %}
-				<div class="ghost-tree-section">
-			
-					<h4>Removed Tree</h4>
-					<p>Removed in {{tree.year_deceased}}</p>
-					<p>{{tree.cause_of_death}}</p>
-			
-				</div>
-			{% endif %}
-			
-			<div class="tree-metadata">
-				<h4>Measurements</h4>
-				<p>Height: {{tree.height}} feet</p>
-				<p>Spread: {{tree.spread}} feet</p>
-				<p>Circumference: {{tree.circumference}} feet</p>
-				<p>Diameter: {{tree.diameter}} inches</p>
-			</div>
-			
+			<p><strong>Address:</strong> {{tree.address}}</p>
 			{% if tree.owner %}
 				<p><strong>Owner:</strong> {{tree.owner}}</p>
 			{% endif %}
 	
 			{% if tree.city_notes %}
-				<p>{{tree.city_notes}}</p>
+				<p><strong>Notes:</strong> {{tree.city_notes}}</p>
 			{% endif %}
 			
 		</div>
@@ -65,7 +98,7 @@
 	
 {% else %}
 
-<p>No tree found with that id.</p>
+	<p>No tree found with that id.</p>
 
 {% endif %}
 
