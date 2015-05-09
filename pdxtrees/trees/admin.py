@@ -11,7 +11,7 @@ class NotableTreeAdmin(admin.ModelAdmin):
     'height', 'spread', 'circumference', 'diameter',
     'city_object_id', 'city_status', 'state_id',
     'latitude', 'longitude',
-    'legacy_uuid'] 
+    'legacy_uuid','public_photo_count'] 
     
     list_display = ('city_tree_id', 'common_name', 'address')
     
@@ -27,7 +27,8 @@ class NotableTreeAdmin(admin.ModelAdmin):
             ('Statistics', {
                 'fields': [
                     ('height', 'spread'),
-                    ('circumference', 'diameter')
+                    ('circumference', 'diameter'),
+                    'public_photo_count'
                 ]
             }),
             ('City (Unused)', {
