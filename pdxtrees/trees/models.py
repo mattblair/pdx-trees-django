@@ -128,6 +128,7 @@ class NotableTree(models.Model):
     cause_of_death = models.CharField(max_length=255, blank=True)
     
     internal_notes = models.TextField(blank=True)
+    public_photo_count = models.IntegerField(default=0)
     
     # old CouchDB uuid from v1.0 of the project
     legacy_uuid = models.CharField(max_length=64, blank=True)
