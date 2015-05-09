@@ -6,7 +6,7 @@ from django.db import transaction
 from django.core.exceptions import ValidationError
 
 
-from models import NotableTree, TreeGenus, CITY_DATASOURCE_TYPE, TreePhoto
+from models import NotableTree, TreeGenus, CITY_DATASOURCE_TYPE, TreePhoto, APPROVED_REVIEW_STATUS_TYPE
 
 
 # to serialize from a queryset:
@@ -377,7 +377,7 @@ def update_public_photo_count_for_tree(tree_to_update):
     
     if tree_to_update:
         
-        approved = tree_to_update.photographed_trees.filter(review_status='a')
+        approved = tree_to_update.photographed_trees.filter(review_status=APPROVED_REVIEW_STATUS_TYPE)
         tree_to_update.public_photo_count = len(approved)
         tree_to_update.save()
 
