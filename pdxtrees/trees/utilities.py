@@ -370,6 +370,35 @@ def diff_with_geojson(geojson_path, persist_data=False):
     return None
 
 
+def update_public_photo_count_for_tree(tree_to_update):
+    """
+    Call directly from save when a tree photo's review_status = approved.
+    """
+    
+    if tree_to_update:
+        
+        approved = tree_to_update.photographed_trees.filter(review_status='a')
+        tree_to_update.public_photo_count = len(approved)
+        tree_to_update.save()
+
+
+def update_public_photo_counts(trees):
+    """
+    Iterate a queryset or list of trees, reset public photo count for each.
+    
+    Photo counts could also be pulled in real-time with:
+
+    from django.db.models import Count
+
+    photo_counts = NotableTree.objects.annotate(photo_count=Count('photographed_tree')).order_by('photo_count')
+    
+    And then filtering as needed.
+    """
+    
+    for t in trees:
+        update_public_photo_count_for_tree(t)
+
+
 def trees_as_geojson(trees):
     """
     Iterate though the trees, possibly with a filtering criteria,
