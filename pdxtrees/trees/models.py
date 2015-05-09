@@ -158,6 +158,9 @@ class NotableTree(models.Model):
     
     class Meta:
         ordering = ['unified_identifier']
+    
+    def public_photos(self):
+        return self.photographed_trees.filter(review_status=APPROVED_REVIEW_STATUS_TYPE)
 
 
 class TreePhoto(models.Model):
