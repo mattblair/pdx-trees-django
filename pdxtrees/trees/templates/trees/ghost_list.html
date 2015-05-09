@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block page_title %}Ghost Trees{% endblock %}
+
+{% block page_head %}
+	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="pdxt-unified-row">
+	<div class="pdxt-single-column">
+		
+		<h2>Ghost Trees</h2>
+		<p>Explanation...</p>
+	</div>
+</div>
+
+<div class="pdxt-split-row">
+	<div class="pdxt-left-column">
+		<div id="map"></div>
+	</div>
+	<div class="pdxt-right-column">
+		<h3>{{ghost_trees.count}} Ghost Trees</h3>
+		{% for t in ghost_trees.all %}
+			{% if t.common_name == "Unknown" %}
+				<p>{{t.city_tree_id}}: No details available.</p>
+			{% else %}
+				<p>
+					<a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a>
+				</p>
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}

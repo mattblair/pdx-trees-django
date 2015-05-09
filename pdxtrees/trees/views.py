@@ -18,6 +18,7 @@ def index(request):
     return render(request, 'trees/index.html', context)
 
 
+# DEPRECATED
 def missing_list(request):
     """
     Iterates from 1 to max city_tree_id, collects missing id #s.
@@ -37,6 +38,63 @@ def missing_list(request):
     context = {"missing_tree_list": missing_tree_list}
     
     return render(request, 'trees/missing_list.html', context)
+
+
+def ghost_list(request):
+    """
+    Template can differentiate between known and unknown for now...
+    """
+    
+    ghost_trees = NotableTree.objects.filter(deceased=True)
+    
+    context = {"ghost_trees": ghost_trees}
+    
+    return render(request, 'trees/ghost_list.html', context)
+
+
+def no_photos_list(request):
+    
+    np = NotableTree.objects.filter(public_photo_count=0)
+    
+    context = {
+        "tree_list": np,
+        "photo_list_title": "Trees Without Photos",
+        "photo_list_description": "We don't have any photos for these. Please click a tree to learn more about it, visit, and take a photo!"
+    }
+    
+    return render(request, 'trees/by_photo_count.html', context)
+
+
+def least_photographed_list(request):
+    """
+    The threshold for least photographed should change over time.
+    """
+    
+    nt = NotableTree.objects.filter(public_photo_count__lt=3).filter(public_photo_count__gt=0).order_by('-public_photo_count')
+    
+    context = {
+        "tree_list": nt,
+        "photo_list_title": "Least Photographed Trees",
+        "photo_list_description": "We have a photo or two for these trees, but it would be great to have more. Please click a tree to learn more about it, visit, and take a photo!"
+    }
+    
+    return render(request, 'trees/by_photo_count.html', context)
+
+
+def most_photographed_list(request):
+    """
+    This theshold value should rise over time, too.
+    """
+    
+    nt = NotableTree.objects.filter(public_photo_count__gte=8).order_by('-public_photo_count')
+    
+    context = {
+        "tree_list": nt,
+        "photo_list_title": "Most Photographed Trees",
+        "photo_list_description": "These trees are the most popular by far!"
+    }
+    
+    return render(request, 'trees/by_photo_count.html', context)
 
 
 def genus_detail(request, genus_slug):

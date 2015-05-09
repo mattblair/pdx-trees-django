@@ -13,8 +13,17 @@ urlpatterns = [
     # /gallery/ - show most recent photos in some kind of grid? clicking goes to tree detail
     # /gallery/<search agruments, like genus, or bbox?>/
     
+    # DEPRECATED
     # /missing/
-    url(r'^missing/$', views.missing_list, name='missing_list_url'),
+    #url(r'^missing/$', views.missing_list, name='missing_list_url'),
+    
+    # /ghosts/ -- may be further divided based on known v. unknown.
+    url(r'^ghosts/$', views.ghost_list, name='ghost_list_url'),
+    
+    # by photo availability:
+    url(r'^unphotographed/$', views.no_photos_list, name='no_photos_url'),
+    url(r'^least-photographed/$', views.least_photographed_list, name='least_photographed_url'),
+    url(r'^most-photographed/$', views.most_photographed_list, name='most_photographed_url'),
     
     # /genus/<genus_slug/
     url(r'^genus/(?P<genus_slug>[\w-]+)/$', views.genus_detail, name='genus_detail_url'),

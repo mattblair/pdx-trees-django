@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block page_title %}{{photo_list_title}}{% endblock %}
+
+{% block page_head %}
+	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="pdxt-unified-row">
+	<div class="pdxt-single-column">
+		
+		<h2>{{photo_list_title}}</h2>
+		<p>{{photo_list_description}}</p>
+	</div>
+</div>
+
+<div class="pdxt-split-row">
+	<div class="pdxt-left-column">
+		<div id="map"></div>
+	</div>
+	<div class="pdxt-right-column">
+		<h3>{{tree_list.count}} Trees</h3>
+		{% for t in tree_list.all %}
+			<p>
+				<a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}} ({{t.public_photo_count}} photos)</a>
+			</p>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock %}
