@@ -198,6 +198,7 @@ class TreePhoto(models.Model):
     approved_submitter_name = models.CharField(max_length=100, blank=True)
     # truncated/edited?
     approved_caption = models.TextField(blank=True)
+    display_order = models.IntegerField(help_text="Higher values will be displayed first.",default=50)
     
     # old CouchDB uuid of photographed tree from v1.0 of the project
     legacy_uuid = models.CharField(max_length=64, blank=True)
@@ -213,7 +214,7 @@ class TreePhoto(models.Model):
         return "Tree Image #%s" % str(self.id)
     
     class Meta:
-        ordering = ['created_date']
+        ordering = ['-display_order','submitted_date']
 
 
 # Future Models:
