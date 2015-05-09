@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ flatpage.title }}{% endblock %}
+
+{% block page_title %}{{ flatpage.title }}{% endblock %}
+
+{% block content %}
+
+<div class="pdxt-unified-row">
+	<div class="pdxt-single-column">
+		{{ flatpage.content }}
+	</div>
+</div>
+
+{% endblock %}
