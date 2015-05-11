@@ -61,3 +61,6 @@ target/
 
 # Specific to PDX Trees:
 settings_private.py
+
+# PostgreSQL backups
+*.pgdump
