@@ -14,7 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 # not committed to public git:
-from settings_private import SECRET_KEY, DATABASES
+#from settings_private import SECRET_KEY, DATABASES
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
