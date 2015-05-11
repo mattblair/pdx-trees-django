@@ -4,7 +4,7 @@ Based on:
 https://devcenter.heroku.com/articles/getting-started-with-django
 """
 
-import settings
+from settings import *
 import os
 
 
