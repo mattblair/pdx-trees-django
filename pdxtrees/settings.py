@@ -91,6 +91,8 @@ DATABASES = {
 }
 """
 
+# override with environment-specific database information
+DATABASES = {}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
