@@ -12,7 +12,10 @@ DEBUG = False
 import dj_database_url
 
 DATABASES = {'default': dj_database_url.config() }
-#DATABASES['default'] =  dj_database_url.config()
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+WSGI_APPLICATION = 'pdxtrees.wsgi_deploy.application'
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
