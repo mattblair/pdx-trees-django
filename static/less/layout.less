@@ -85,9 +85,32 @@
 
 .ghost-tree-section {
     width: 100%;
-    color: #fff;
-    background-color: #666;
+    color: @pdxt-ghost-text-color;
+    background-color: @pdxt-ghost-bg-color;
+    text-align: center;
     padding: 10px;
+    margin: 10px 0px;
+    
+    font-size: 24px;
+    
+    @media(min-width: @screen-tablet) {
+        font-size: 48px;
+    }
+}
+
+.ghost-label {
+    color: @pdxt-ghost-text-color;
+    background-color: @pdxt-ghost-bg-color;
+    padding: 4px;
+    margin: 10px;
+}
+
+.pdxtree-cell {
+    padding: 20px;
+    margin: 10px 0px;
+    background-color: @pdxt-green-lighter;
+    color: @pdxt-mocha;
+    line-height: 1.4em;
 }
 
 #map { 
