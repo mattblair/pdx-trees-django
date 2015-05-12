@@ -1,0 +1,6 @@
+<div class="pdxtree-cell">
+	<p># {{t.city_tree_id}}{% if t.deceased %} <span class="ghost-label">Ghost</span>{% endif %}</p>
+	<p class="tree-cell-common-name"><a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.common_name}}</a></p>
+	<p class="scientific-name tree-cell-scientific-name">{{t.scientific_name}}</p>
+	<p>{{t.address}}</p>
+</div>

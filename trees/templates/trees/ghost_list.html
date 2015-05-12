@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load pdxtree_snippets %}
 
 {% block page_title %}Ghost Trees{% endblock %}
 
@@ -27,9 +28,7 @@
 			{% if t.common_name == "Unknown" %}
 				<p>{{t.city_tree_id}}: No details available.</p>
 			{% else %}
-				<p>
-					<a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a>
-				</p>
+				{% tree_cell t %}
 			{% endif %}
 		{% endfor %}
 	</div>
