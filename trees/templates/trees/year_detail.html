@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load pdxtree_snippets %}
 
 {% block page_title %}Heritage Trees Designated in {{year}}{% endblock %}
 
@@ -8,20 +9,26 @@
 {% endblock %}
 
 {% block content %}
-
-	<h2>Heritage Trees Designated in {{year}}</h2>
+	<div class="pdxt-split-row">
+		<div class="pdxt-left-column">
+			<h2>Heritage Trees Designated in {{year}}</h2>
+		</div>
+	</div>
 	
 	{% if trees_in_year %}
+		
+		<div class="pdxt-split-row">
+			<div class="pdxt-left-column">
+				<div id="map"></div>
+			</div>
+			<div class="pdxt-left-column">
+				<h3>{{trees_in_year.count}} trees:</h3>
 	
-		<div id="map"></div>
-	
-		<h3>{{trees_in_year.count}} trees:</h3>
-	
-		{% for t in trees_in_year %}
-			<p><a href="{% url 'trees:tree_detail_url' t.city_tree_id %}">{{t.city_tree_id}}: {{t.common_name}}</a></p>
-		{% endfor %}
-	
-		{{geojson}}
+				{% for t in trees_in_year %}
+					{% tree_cell t %}
+				{% endfor %}
+			</div>
+		</div>
 	
 	{% else %}
 		<p>No trees found in {{year}}.</p>
