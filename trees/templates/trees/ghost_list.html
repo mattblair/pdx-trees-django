@@ -5,7 +5,7 @@
 {% block page_title %}Ghost Trees{% endblock %}
 
 {% block page_head %}
-	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+	{% map_div_headers %}
 {% endblock %}
 
 {% block content %}
@@ -34,4 +34,8 @@
 	</div>
 </div>
 
+{% endblock %}
+
+{% block document_ready_javascript %}
+	{% map_div_js 45.5292 -122.6993 11 'map' %}
 {% endblock %}

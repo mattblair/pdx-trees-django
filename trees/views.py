@@ -47,7 +47,11 @@ def ghost_list(request):
     
     ghost_trees = NotableTree.objects.filter(deceased=True)
     
-    context = {"ghost_trees": ghost_trees}
+    context = {
+        "ghost_trees": ghost_trees,
+        "geojson": trees_as_geojson(ghost_trees)
+        
+    }
     
     return render(request, 'trees/ghost_list.html', context)
 
