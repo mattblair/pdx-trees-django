@@ -1,0 +1,14 @@
+L.mapbox.accessToken = 'pk.eyJ1IjoiZWxzZXdpc2UiLCJhIjoiWGpDbG9RYyJ9.ZqfX-6R6-tOEvTagnLj60A';
+var map = L.mapbox.map('{{map_div_id}}', 'elsewise.m5ncj54e')
+    .setView([{{center_latitude}}, {{center_longitude}}], {{zoom_level}});
+	var featureLayer = L.mapbox.featureLayer({{geojson|safe}})
+		.on('ready', function(layer) {
+			this.eachLayer(function(marker) {
+				marker.setIcon(L.mapbox.marker.icon({
+					'marker-color': '#9c713d',
+					'marker-size': 'medium',
+					'marker-symbol': 'tree'
+				}));
+			});
+		})
+	    .addTo(map);
