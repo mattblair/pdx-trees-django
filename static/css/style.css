@@ -6731,6 +6731,9 @@ button.close {
     width: 16.66666667%;
   }
 }
+.pdxt-photo-row {
+  margin: 40px 0px;
+}
 .btn {
   margin: 5px 5px 5px 0px;
 }
@@ -6754,8 +6757,30 @@ button.close {
 }
 .ghost-tree-section {
   width: 100%;
-  color: #fff;
-  background-color: #666;
+  color: #ffffff;
+  background-color: #999999;
+  text-align: center;
+  padding: 10px;
+  margin: 10px 0px;
+  font-size: 24px;
+}
+@media (min-width: 768px) {
+  .ghost-tree-section {
+    font-size: 48px;
+  }
+}
+.ghost-label {
+  color: #ffffff;
+  background-color: #999999;
+  padding: 4px;
+  margin: 10px;
+}
+.pdxtree-cell {
+  padding: 20px;
+  margin: 10px 0px;
+  background-color: #b9d5c0;
+  color: #a77c51;
+  line-height: 1.4em;
 }
 #map {
   height: 200px;
@@ -6770,7 +6795,6 @@ button.close {
 #tree-map {
   background-color: #a77c51;
   height: 200px;
-  width: 300px;
 }
 @media (min-width: 768px) {
   #tree-map {
@@ -6794,6 +6818,23 @@ p {
 a {
   color: #5d986a;
 }
+.tree-cell-common-name {
+  font-size: 22px;
+}
+@media (min-width: 768px) {
+  .tree-cell-common-name {
+    font-size: 40px;
+  }
+}
+.tree-cell-scientific-name {
+  font-size: 15px;
+  line-height: 1.6em;
+}
+@media (min-width: 768px) {
+  .tree-cell-scientific-name {
+    font-size: 24px;
+  }
+}
 .tree-detail-common-name {
   font-size: 28px;
 }
@@ -6804,6 +6845,7 @@ a {
 }
 .tree-detail-scientific-name {
   font-size: 22px;
+  line-height: 1.4em;
 }
 @media (min-width: 768px) {
   .tree-detail-scientific-name {
