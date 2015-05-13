@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load pdxtree_snippets %}
 
 {% block page_title %}
 	{% if tree %}
@@ -9,8 +10,7 @@
 {% endblock %}
 
 {% block page_head %}
-	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
-	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+	{% map_div_headers %}
 {% endblock %}
 
 {% block content %}
@@ -109,23 +109,7 @@
 
 {% endblock %}
 
+
 {% block document_ready_javascript %}
-	
-	L.mapbox.accessToken = 'pk.eyJ1IjoiZWxzZXdpc2UiLCJhIjoiWGpDbG9RYyJ9.ZqfX-6R6-tOEvTagnLj60A';
-	var map = L.mapbox.map('tree-map', 'elsewise.m5ncj54e')
-	    .setView([{{tree.latitude}}, {{tree.longitude}}], 14);
-		var featureLayer = L.mapbox.featureLayer({{geojson|safe}})
-			.on('ready', function(layer) {
-				this.eachLayer(function(marker) {
-					// adapted from: 
-					// https://www.mapbox.com/mapbox.js/example/v1.0.0/markers-from-csv-custom-style/
-					marker.setIcon(L.mapbox.marker.icon({
-						'marker-color': '#9c713d',
-						'marker-size': 'medium',
-						'marker-symbol': 'building'
-					}));
-				});
-			})
-		    .addTo(map);
-		
+	{% map_div_js tree.latitude tree.longitude 14 'tree-map' %}
 {% endblock %}
