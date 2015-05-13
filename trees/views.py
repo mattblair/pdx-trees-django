@@ -205,5 +205,8 @@ def tree_detail(request, treeid):
     Show details for a tree, including a map
     """
     tree = get_object_or_404(NotableTree, city_tree_id=treeid)
-    context = {'tree': tree }
+    context = {
+        'tree': tree,
+        'geojson': trees_as_geojson([tree])
+    }
     return render(request, 'trees/tree_detail.html', context)
