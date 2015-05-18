@@ -399,10 +399,14 @@ def update_public_photo_counts(trees):
         update_public_photo_count_for_tree(t)
 
 
-def trees_as_geojson(trees):
+def trees_as_geojson(trees, include_simplestyle=True):
     """
     Iterate though the trees, possibly with a filtering criteria,
-    and return a GeoJSON Feature Collection
+    and return a GeoJSON Feature Collection.
+    
+    If include_simplestyle is true, style properties will be added:
+    https://www.mapbox.com/guides/an-open-platform/#simplestyle
+    https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
     """
     # or accept a subset iterable as an argument
     #trees = NotableTree.objects.all()
@@ -422,7 +426,21 @@ def trees_as_geojson(trees):
         tree_properties_dict['subtitle'] = t.scientific_name
         if t.genus:
             tree_properties_dict['genus'] = t.genus.genus_name
-
+        
+        if include_simplestyle:
+            tree_properties_dict['description'] = t.scientific_name
+            tree_properties_dict['marker-size'] = "medium"
+            
+            if t.deceased:
+                tree_properties_dict['marker-symbol'] = "cemetery"
+                tree_properties_dict['marker-color'] = "#999"
+                tree_properties_dict['className'] = "tree-marker-ghost"
+            else:
+                # https://www.mapbox.com/maki/
+                tree_properties_dict['marker-symbol'] = "park" # or park 2
+                tree_properties_dict['marker-color'] = "#36593E"
+                tree_properties_dict['className'] = "tree-marker-heritage"
+        
         # structure it as GeoJSON
         geometry_dict['type'] = "Point"
         geometry_dict['coordinates'] = [float(t.longitude), float(t.latitude)]
