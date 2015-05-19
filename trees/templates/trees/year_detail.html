@@ -5,7 +5,7 @@
 {% block page_title %}Heritage Trees Designated in {{year}}{% endblock %}
 
 {% block page_head %}
-	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+	{% map_div_headers %}
 {% endblock %}
 
 {% block content %}
@@ -36,39 +36,6 @@
 
 {% endblock %}
 
-
-{% block after_jquery %}
-	<script src="{% static 'js/leaflet.js' %}"></script>
-{% endblock %}
-
 {% block document_ready_javascript %}
-
-	var map = L.map('map').setView([45.52, -122.65], 11);
-	
-	L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-		attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
-	}).addTo(map);
-	
-	function onEachFeature(feature, layer) {
-		layer.bindPopup(feature.properties.title);
-	}
-	
-	trees = {{geojson|safe}}
-	
-	L.geoJson(trees, {
-
-		onEachFeature: onEachFeature,
-
-		pointToLayer: function (feature, latlng) {
-			return L.circleMarker(latlng, {
-				radius: 8,
-				fillColor: "#33cc00",
-				color: "#000",
-				weight: 1,
-				opacity: 1,
-				fillOpacity: 0.8
-			});
-		}
-	}).addTo(map);
-	
+	{% map_div_js 45.5292 -122.6993 11 'map' %}
 {% endblock %}

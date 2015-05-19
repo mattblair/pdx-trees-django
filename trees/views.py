@@ -62,6 +62,7 @@ def no_photos_list(request):
     
     context = {
         "tree_list": np,
+        "geojson": trees_as_geojson(np),
         "photo_list_title": "Trees Without Photos",
         "photo_list_description": "We don't have any photos for these. Please click a tree to learn more about it, visit, and take a photo!"
     }
@@ -78,6 +79,7 @@ def least_photographed_list(request):
     
     context = {
         "tree_list": nt,
+        "geojson": trees_as_geojson(nt),
         "photo_list_title": "Least Photographed Trees",
         "photo_list_description": "We have a photo or two for these trees, but it would be great to have more. Please click a tree to learn more about it, visit, and take a photo!"
     }
@@ -94,6 +96,7 @@ def most_photographed_list(request):
     
     context = {
         "tree_list": nt,
+        "geojson": trees_as_geojson(nt),
         "photo_list_title": "Most Photographed Trees",
         "photo_list_description": "These trees are the most popular by far!"
     }
