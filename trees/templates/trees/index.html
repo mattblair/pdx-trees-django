@@ -10,9 +10,19 @@
 
 {% block content %}
 
-<p><a href="{% url 'trees:genus_detail_url' 'pinus' %}">Genus Example</a> | <a href="{% url 'trees:year_list_url' %}">By Year</a> | <a href="{% url 'trees:ghost_list_url' %}">Ghost Trees</a> | <a href="{% url 'trees:no_photos_url' %}">Need Photos!</a></p>
-
-<div id="map"></div>
+<div class="pdxt-sidebar-row">
+	<div class="pdxt-content-column">
+		<div id="map"></div>
+	</div>
+	<div class="pdxt-sidebar-column">
+		<ul>
+			<li><a href="{% url 'trees:genus_detail_url' 'pinus' %}">By Genus</a></li>
+			<li><a href="{% url 'trees:year_list_url' %}">Year Designated</a></li>
+			<li><a href="{% url 'trees:ghost_list_url' %}">Ghost Trees</a></li>
+			<li><a href="{% url 'trees:no_photos_url' %}">Trees Without Photos</a></p></li>
+		</ul>
+	</div>
+</div>
 
 {% endblock %}
 
