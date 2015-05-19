@@ -158,6 +158,10 @@ class NotableTree(models.Model):
         """
         return "Tree %s" % str(self.unified_identifier)
     
+    def get_absolute_url(self):
+        # TODO: Adapt to non-heritage trees
+        return reverse('trees:tree_detail_url', args=[self.city_tree_id])
+    
     class Meta:
         ordering = ['unified_identifier']
     
