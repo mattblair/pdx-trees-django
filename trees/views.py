@@ -6,8 +6,16 @@ from django.core.serializers import serialize
 
 from django.db.models import Count, Max
 
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.utils.text import slugify
+
+
 from trees.models import NotableTree, TreeGenus
 from trees.utilities import trees_as_geojson
+
+from trees.forms import SupplementalContentForm
+
 
 def index(request):
     """
@@ -16,6 +24,11 @@ def index(request):
     
     context = {"geojson": trees_as_geojson(NotableTree.objects.all())}
     return render(request, 'trees/index.html', context)
+
+
+def public_logout(request):
+    logout(request)
+    return redirect('trees:index_url')
 
 
 # DEPRECATED

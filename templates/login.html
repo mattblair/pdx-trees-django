@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block page_title %}Login{% endblock %}
+
+{% block content %}
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+
+<div class="pdxt-unified-row">
+	<div class="pdxt-single-column">
+		{% if form.errors %}
+		<p>Your username and password didn't match. Please try again.</p>
+		{% endif %}
+	</div>
+</div>
+
+<div class="pdxt-split-row">
+	<div class="pdxt-left-column">
+		<p>Username</p>
+		<p><input id="id_username" maxlength="254" name="username" type="text" placeholder="Username" class="form-control input-lg" autofocus /></p>
+		
+		<p>Password</p>
+		<p><input id="id_password" name="password" type="password" placeholder="Password" class="form-control input-lg" /></p>
+		
+		<input type="submit" value="Login" />
+		<input type="hidden" name="next" value="{{ next }}" />
+		
+	</div>
+
+	<div class="pdxt-right-column">
+		<p>Contact <a href="mailto:admin@pdxtrees.org">admin@pdxtrees.org</a> if you have trouble logging in.</p>
+	</div>
+</div>
+
+</form>
+
+{% endblock %}
