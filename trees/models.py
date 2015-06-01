@@ -230,6 +230,10 @@ class TreePhoto(models.Model):
     submitted_latitude = models.DecimalField(blank=True, max_digits=9, decimal_places=6)
     submitted_longitude = models.DecimalField(blank=True, max_digits=9, decimal_places=6)
     
+    license = models.CharField(max_length=20,
+                               choices=LICENSE_CHOICES,
+                               default=CC_BY_SA_LICENSE)
+    
     # moderation:
     review_status = models.CharField(max_length=10, choices=REVIEW_STATUS_TYPE_CHOICES, default=PENDING_REVIEW_STATUS_TYPE, blank=False)
     review_notes = models.TextField(blank=True)
