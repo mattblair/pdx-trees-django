@@ -2,8 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
+from django.utils.text import slugify
 from django.core.urlresolvers import reverse
+
+import uuid
 
 
 # these may be reused for several models
@@ -423,11 +425,26 @@ class SupplementalContent(models.Model):
     mod_date = models.DateTimeField('last modified', auto_now=True)
     
     
+    def save(self, *args, **kwargs):
+        
+        if not self.slug:
+            if self.title:
+                # TODO: test that this will be unique
+                self.slug = slugify(self.title)
+            else:
+                an_id = uuid.uuid4()
+                self.slug = an_id.hex
+        
+        super(SupplementalContent, self).save(*args, **kwargs)
+    
+    
     def __unicode__(self):
         return self.slug
         
     class Meta:
         ordering = ['mod_date'] # or display_order
+        verbose_name = "submitted Content"
+        verbose_name_plural = "submitted Content"
 
 
 # TreeGroup model
