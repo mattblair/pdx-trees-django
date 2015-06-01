@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
 from django.core.urlresolvers import reverse
 
 
@@ -18,16 +21,46 @@ TREE_DATASOURCE_TYPE_CHOICES = (
 )
 
 
+DRAFT_REVIEW_STATUS_TYPE = 'd'
 PENDING_REVIEW_STATUS_TYPE = 'p'
 APPROVED_REVIEW_STATUS_TYPE = 'a'
 REJECTED_REVIEW_STATUS_TYPE = 'r'
 TESTING_REVIEW_STATUS_TYPE = 't'
 
 REVIEW_STATUS_TYPE_CHOICES = (
+    (DRAFT_REVIEW_STATUS_TYPE, 'Draft'),
     (PENDING_REVIEW_STATUS_TYPE, 'Pending'),
     (APPROVED_REVIEW_STATUS_TYPE, 'Approved'),
     (REJECTED_REVIEW_STATUS_TYPE, 'Rejected'),
     (TESTING_REVIEW_STATUS_TYPE, 'Testing Only'),
+)
+
+
+CC_BY_SA_LICENSE = 'CC BY-SA' # the default
+CC_BY_LICENSE = 'CC BY'
+CC_BY_NC_SA_LICENSE = 'CC BY-NC-SA'
+PUBLIC_DOMAIN_LICENSE = 'Public Domain'
+UNKNOWN_LICENSE = 'Unknown'
+
+LICENSE_CHOICES = (
+    (CC_BY_SA_LICENSE, 'CC Attribution-ShareAlike'),
+    (CC_BY_LICENSE, 'CC Attribution'),
+    (CC_BY_NC_SA_LICENSE, 'CC Attribution-NonCommercial-ShareAlike'),
+    (PUBLIC_DOMAIN_LICENSE, 'Public Domain'),
+    (UNKNOWN_LICENSE, 'Unknown'),
+)
+
+
+PDF_ATTACHMENT_TYPE = 'pdf'
+JSON_ATTACHMENT_TYPE = 'json'
+ZIP_ATTACHMENT_TYPE = 'zip'
+NONE_ATTACHMENT_TYPE = 'none'
+
+ATTACHMENT_TYPE_CHOICES = (
+    (PDF_ATTACHMENT_TYPE, 'PDF'),
+    (JSON_ATTACHMENT_TYPE, 'JSON'),
+    (ZIP_ATTACHMENT_TYPE, 'Zip File'),
+    (NONE_ATTACHMENT_TYPE, 'None')
 )
 
 
@@ -283,9 +316,112 @@ class PhotoFlag(models.Model):
         verbose_name_plural = "submitted Photo Flags"
 
 
+class SupplementalContent(models.Model):
+    """
+    Could be added to a tree, genus, or group.
+    """
+    
+    
+    SUPPLEMENTAL_TEXT_LAYOUT = 'T'
+    SUPPLEMENTAL_IMAGE_LAYOUT = 'I'
+    SUPPLEMENTAL_SOUND_LAYOUT = 'S'
+    SUPPLEMENTAL_DOCUMENT_LAYOUT = 'D'
+    SUPPLEMENTAL_UNKNOWN_LAYOUT = 'U'
+    
+    SUPPLEMENTAL_LAYOUT_CHOICES = (
+        (SUPPLEMENTAL_TEXT_LAYOUT, 'Text'),
+        (SUPPLEMENTAL_IMAGE_LAYOUT, 'Image'),
+        (SUPPLEMENTAL_SOUND_LAYOUT, 'Sound'),
+        (SUPPLEMENTAL_DOCUMENT_LAYOUT, 'Document'),
+        (SUPPLEMENTAL_UNKNOWN_LAYOUT, 'Unknown')
+    )
+    
+    
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    
+    title = models.CharField(max_length=200, blank=True)
+    subtitle = models.CharField(max_length=255, blank=True)
+    slug = models.SlugField(unique=True)
+    display_order = models.IntegerField(default=50)
+    
+    summary = models.CharField(max_length=255, blank=True, help_text="Used for previews, list presentations, etc.")
+    article_text = models.TextField(blank=True)
+    
+    credit = models.CharField(max_length=255, blank=True)
+    license = models.CharField(max_length=20,
+                               choices=LICENSE_CHOICES,
+                               default=CC_BY_SA_LICENSE)
+    
+    copyright_notice = models.CharField(max_length=255, blank=True)
+    copyright_notes = models.TextField(blank=True, help_text="Not visible to the public at any time.")
+    
+    
+    editorial_notes = models.TextField(blank=True, help_text="Not visible to the public at any time.")
 
-# Future Models:
+    workflow_status = models.CharField(max_length=20, choices=REVIEW_STATUS_TYPE_CHOICES, default=DRAFT_REVIEW_STATUS_TYPE)
+    
+    # mainly determined by media to present
+    layout = models.CharField(max_length=1, 
+                              choices=SUPPLEMENTAL_LAYOUT_CHOICES,
+                              default=SUPPLEMENTAL_TEXT_LAYOUT)
+    
+    
+    photo = models.ImageField(upload_to="supplemental_photos", blank=True, null=True)
+    photo_title = models.CharField(max_length=100, blank=True)
+    photo_caption = models.CharField(max_length=255, blank=True)
+    photo_credit = models.CharField(max_length=255, blank=True)
+    photo_copyright = models.CharField(max_length=255, blank=True)
+    
+    photo_license = models.CharField(max_length=20,
+                                     choices=LICENSE_CHOICES,
+                                     default=CC_BY_SA_LICENSE)
+                                    
+    photo_notes = models.TextField(blank=True, help_text="Not visible to the public at any time.")
+    
+    
+    audio = models.FileField(upload_to="supplemental_audio", blank=True, null=True)
+    audio_title = models.CharField(max_length=100, blank=True)
+    audio_caption = models.CharField(max_length=255, blank=True)
+    audio_transcription = models.TextField(blank=True)
+    audio_credit = models.CharField(max_length=255, blank=True)
+    audio_copyright = models.CharField(max_length=255, blank=True)
+    
+    audio_license = models.CharField(max_length=20,
+                                     choices=LICENSE_CHOICES,
+                                     default=CC_BY_SA_LICENSE)
+                                    
+    audio_notes = models.TextField(blank=True, help_text="Not visible to the public at any time.")
+    
+    
+    # downloadable file: PDF, JSON, or Zip for now
+    attached_file = models.FileField(upload_to="supplemental_file", blank=True, null=True)
+    attached_file_title = models.CharField(max_length=100, blank=True)
+    attached_file_caption = models.CharField(max_length=255, blank=True)
+    attached_file_type = models.CharField(max_length=20,
+                                          choices=ATTACHMENT_TYPE_CHOICES,
+                                          default=NONE_ATTACHMENT_TYPE)
+                                     
+    attached_file_credit = models.CharField(max_length=255, blank=True)
+    attached_file_copyright = models.CharField(max_length=255, blank=True)
+    
+    attached_file_license = models.CharField(max_length=20,
+                                             choices=LICENSE_CHOICES,
+                                             default=CC_BY_SA_LICENSE)
+                                    
+    attached_file_notes = models.TextField(blank=True, help_text="Not visible to the public at any time.")
+    
+    
+    created_date = models.DateTimeField(auto_now_add=True)
+    mod_date = models.DateTimeField('last modified', auto_now=True)
+    
+    
+    def __unicode__(self):
+        return self.slug
+        
+    class Meta:
+        ordering = ['mod_date'] # or display_order
 
-# Submission model
 
 # TreeGroup model
