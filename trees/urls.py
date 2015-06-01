@@ -39,6 +39,10 @@ urlpatterns = [
     
     # /tree/<tree_id>/submit/ -- upload photo, enter metadata with cc details
     #url(r'^tree/(?P<id>\d+)/$', views.tree_submit, name='tree_submit_url'),
+    
+    # /tree/<tree_id>/add_content/
+    url(r'^tree/(?P<treeid>\d+)/add_content/$', views.tree_add_content, name='tree_add_content_url'),
+    
     # /tree/<tree_id>/<media_id>/ 
     # does it make sense to have an url for each media item?
     #url(r'^tree/(?P<id>\d+)/$', views.tree_media, name='tree_media_url'),

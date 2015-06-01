@@ -8,7 +8,7 @@ from django.db.models import Count, Max
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.utils.text import slugify
+from django.contrib import messages
 
 
 from trees.models import NotableTree, TreeGenus
@@ -230,3 +230,45 @@ def tree_detail(request, treeid):
         'geojson': trees_as_geojson([tree])
     }
     return render(request, 'trees/tree_detail.html', context)
+
+
+@login_required
+def tree_add_content(request, treeid):
+    """
+    Show/process form for submitting supplemental content for a tree.
+    """
+    tree = get_object_or_404(NotableTree, city_tree_id=treeid)
+    
+    content_form = SupplementalContentForm(request.POST or None)
+    
+    if request.method == 'POST':
+        
+        if content_form.is_valid():
+            
+            new_content = content_form.save(commit=False)
+            
+            # set tree and author
+            new_content.content_object = tree
+            new_content.author = request.user
+            
+            # set any other properties
+            
+            new_content.save()
+                
+            messages.add_message(request, messages.SUCCESS, 'Submission saved.')
+            
+            return HttpResponseRedirect(reverse('trees:tree_detail_url', args=[treeid]))
+        
+        else:
+            # TODO: Add a more specific validation error, or pass errors through
+            # print request.POST
+            messages.add_message(request, messages.WARNING, 'Content could not be saved.')
+    
+    # if the request method is a GET, send tree detail + form
+    context = {
+        'tree': tree,
+        'geojson': trees_as_geojson([tree]),
+        'content_form': content_form
+    }
+    return render(request, 'trees/tree_add_content.html', context)
+
