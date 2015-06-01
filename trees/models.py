@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
@@ -353,6 +354,7 @@ class SupplementalContent(models.Model):
     summary = models.CharField(max_length=255, blank=True, help_text="Used for previews, list presentations, etc.")
     article_text = models.TextField(blank=True)
     
+    author = models.ForeignKey(User)
     credit = models.CharField(max_length=255, blank=True)
     license = models.CharField(max_length=20,
                                choices=LICENSE_CHOICES,
