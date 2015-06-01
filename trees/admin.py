@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import NotableTree, TreeGenus, TreePhoto
+from models import NotableTree, TreeGenus, TreePhoto, SupplementalContent
 
 
 class NotableTreeAdmin(admin.ModelAdmin):
@@ -116,3 +116,12 @@ class TreePhotoAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TreePhoto, TreePhotoAdmin)
+
+
+class SupplementalContentAdmin(admin.ModelAdmin):
+    
+    list_display = ('title', 'mod_date', 'content_type', 'workflow_status')
+    list_filter = ['workflow_status']
+    readonly_fields = ['created_date', 'mod_date', 'content_type', 'object_id', 'content_object']
+
+admin.site.register(SupplementalContent, SupplementalContentAdmin)
