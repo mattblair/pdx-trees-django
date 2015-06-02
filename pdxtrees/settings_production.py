@@ -19,6 +19,9 @@ WSGI_APPLICATION = 'pdxtrees.wsgi_deploy.application'
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+AWS_S3_ACCESS_KEY_ID = os.environ.get('AWS_S3_ACCESS_KEY_ID') 
+AWS_S3_SECRET_ACCESS_KEY = os.environ.get('AWS_S3_SECRET_ACCESS_KEY') 
+
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
