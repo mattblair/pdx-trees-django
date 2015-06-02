@@ -26,8 +26,28 @@
 		  <h1><a href="{% url 'trees:index_url' %}">PDX Trees</a> <small>Exploring Portland&apos;s Heritage Trees</small></h1>
 		</div>
 		
+		{% if messages %}
+		<div id="messages">
+		    {% for message in messages %}
+		    <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+			<p>{{ message }}</p>
+			</div>
+		    {% endfor %}
+		</div>
+		{% endif %}
+		
 		{% block content %}{% endblock %}
-
+		
+		<div class="pdxt-unified-row footer-section">
+			<div class="pdxt-single-column">
+				{% if user.is_authenticated %}
+					<p><a href="{% url 'logout_url' %}">Log Out</a></p>
+				{% else %}
+					<p><a href="{% url 'login_url' %}">Log In</a></p>
+				{% endif %}
+			</div>
+		</div>
+		
 	</div>
 	
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

@@ -38,7 +38,7 @@
 		<div class="pdxt-sidebar-column">
 			
 			{% if user.is_authenticated %}
-				<h2><a href="{% url 'trees:tree_add_content_url' tree.city_tree_id %}">Add Content</a></h2>
+				<h2><a href="{% url 'trees:tree_add_content_url' tree.city_tree_id %}" class="pdxt-button">Add Content</a></h2>
 			{% endif %}
 			
 			<div class="tree-metadata">
