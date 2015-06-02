@@ -6737,6 +6737,14 @@ button.close {
 .btn {
   margin: 5px 5px 5px 0px;
 }
+.pdxt-button {
+  text-decoration: none;
+  text-align: center;
+  padding: .2em .6em;
+  color: #b9d5c0;
+  background-color: #5d986a;
+  margin: 4px 4px 4px 0px;
+}
 .errorlist li {
   color: #f66;
 }
@@ -6817,6 +6825,11 @@ p {
 }
 a {
   color: #5d986a;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: #d9c66a;
 }
 .tree-cell-common-name {
   font-size: 22px;
@@ -6854,4 +6867,27 @@ a {
 }
 .scientific-name {
   font-style: oblique;
+}
+.footer-section {
+  margin-top: 10px;
+  padding-top: 5px;
+  background-color: #5d986a;
+  font-weight: 600;
+  font-size: 13px;
+}
+@media (min-width: 768px) {
+  .footer-section {
+    margin-top: 30px;
+    padding-top: 10px;
+  }
+}
+.footer-section a {
+  color: #b9d5c0;
+}
+.footer-section a:link {
+  color: #b9d5c0;
+}
+.footer-section a:hover {
+  color: #d9c66a;
+  text-decoration: none;
 }
