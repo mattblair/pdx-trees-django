@@ -239,7 +239,7 @@ def tree_add_content(request, treeid):
     """
     tree = get_object_or_404(NotableTree, city_tree_id=treeid)
     
-    content_form = SupplementalContentForm(request.POST or None)
+    content_form = SupplementalContentForm(request.POST or None, request.FILES)
     
     if request.method == 'POST':
         

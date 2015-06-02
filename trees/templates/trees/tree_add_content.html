@@ -19,7 +19,7 @@
 <div class="pdxt-split-row">
 	<div class="pdxt-left-column">
 		
-		<form action="{% url 'trees:tree_add_content_url' tree.city_tree_id %}" method="post">
+		<form enctype="multipart/form-data" action="{% url 'trees:tree_add_content_url' tree.city_tree_id %}" method="post">
 			{% csrf_token %}
 		
 			{{ content_form.as_p }}
