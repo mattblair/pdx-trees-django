@@ -38,6 +38,23 @@
 			<div id="map"></div>
 		</div>
 		<div class="pdxt-right-column">
+			
+			{% if user.is_authenticated %}
+				
+				<h2>Submitted Content</h2>
+				{% if related_content %}
+					<ul>
+					{% for c in related_content %}
+						<li>{{c.get_workflow_status_display}}: {{c.title}} ({{c.mod_date}})</li>
+					{% endfor %}
+					</ul>
+				{% else %}
+					<p>No submissions received yet.</p>
+				{% endif %}
+				
+				<h2><a href="{% url 'trees:genus_add_content_url' genus.slug %}" class="pdxt-button">Add Content</a></h2>
+			{% endif %}
+			
 			<h2>{{genus.common_name}}</h2>
 			<h3 class="scientific-name">{{genus.genus_name}}</h3>
 			<h4>{{genus.trees.count}} Trees Found</h4>
@@ -46,6 +63,25 @@
 			{% endfor %}
 		</div>
 	</div>
+	
+	{% if related_content %}
+		<div class="pdxt-unified-row">
+			<div class="pdxt-single-column">
+				
+				<h2>Additional Information</h2>
+				{% for c in related_content %}
+					<div class="supplemental">
+						<h3>{{c.title}}</h3>
+						<h4>{{c.subtitle}}</h4>
+						<p>{{c.credit}}</p>
+						<div>
+							{{c.article_text|linebreaks}}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
 	
 {% else %}
 	<div class="pdxt-unified-row">

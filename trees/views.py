@@ -127,10 +127,18 @@ def genus_detail(request, genus_slug):
     
     genus_menu_list = TreeGenus.objects.filter(display_in_menu=True)
     
+    genus_type = ContentType.objects.get_for_model(genus)
+    
+    related_content = SupplementalContent.objects.filter(
+        content_type__pk=genus_type.id,
+        object_id=genus.id
+    )
+    
     context = {
         "genus": genus,
         "genus_menu_list": genus_menu_list,
-        "geojson": trees_as_geojson(genus.trees.all())
+        "geojson": trees_as_geojson(genus.trees.all()),
+        'related_content': related_content
     }
     return render(request, 'trees/genus_detail.html', context)
 
@@ -280,3 +288,44 @@ def tree_add_content(request, treeid):
     }
     return render(request, 'trees/tree_add_content.html', context)
 
+
+@login_required
+def genus_add_content(request, genus_slug):
+    """
+    Show/process form for submitting supplemental content for a tree.
+    """
+    
+    genus = get_object_or_404(TreeGenus, slug=genus_slug)
+    
+    content_form = SupplementalContentForm(request.POST or None, request.FILES)
+    
+    if request.method == 'POST':
+        
+        if content_form.is_valid():
+            
+            new_content = content_form.save(commit=False)
+            
+            # set genus and author
+            new_content.content_object = genus
+            new_content.author = request.user
+            
+            # set any other properties
+            
+            new_content.save()
+                
+            messages.add_message(request, messages.SUCCESS, 'Submission saved.')
+            
+            return HttpResponseRedirect(reverse('trees:genus_detail_url', args=[genus_slug]))
+        
+        else:
+            # TODO: Add a more specific validation error, or pass errors through
+            # print request.POST
+            messages.add_message(request, messages.WARNING, 'Content could not be saved for this genus.')
+    
+    # if the request method is a GET, send tree detail + form
+    context = {
+        'genus': genus,
+        'geojson': trees_as_geojson(genus.trees.all()),
+        'content_form': content_form
+    }
+    return render(request, 'trees/genus_add_content.html', context)

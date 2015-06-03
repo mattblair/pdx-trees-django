@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load pdxtree_snippets %}
+
+{% block page_title %}Add Content to a Tree{% endblock %}
+
+{% block page_head %}
+	{% map_div_headers %}
+{% endblock %}
+
+{% block content %}
+
+<div class="pdxt-unified-row">
+	<div class="pdxt-single-column">
+		<h2>Add Supplemental Content</h2>
+	</div>
+</div>
+
+<div class="pdxt-split-row">
+	<div class="pdxt-left-column">
+		
+		<form enctype="multipart/form-data" action="{% url 'trees:genus_add_content_url' genus.slug %}" method="post">
+			{% csrf_token %}
+		
+			{{ content_form.as_p }}
+			
+			<p>Please note: By submitting material to this site, you are allowing the display and re-use under the Creative Commons Attribution-ShareAlike license. For more information, please see the <a href="https://creativecommons.org/licenses/">Creative Commons License Page</a>.</p>
+			
+			<input type="submit" value="Save" class="pdxt-button" />
+		</form>
+		
+	</div>
+	<div class="pdxt-right-column">
+		<h2 class="tree-detail-common-name">{{genus.common_name}}</h2>
+		<h3 class="tree-detail-scientific-name scientific-name">{{genus.genus_name}}</h3>
+		<div id="map"></div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block document_ready_javascript %}
+	{% map_div_js 45.5292 -122.6993 11 'map' %}
+{% endblock %}

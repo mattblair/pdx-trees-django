@@ -25,9 +25,12 @@ urlpatterns = [
     url(r'^least-photographed/$', views.least_photographed_list, name='least_photographed_url'),
     url(r'^most-photographed/$', views.most_photographed_list, name='most_photographed_url'),
     
-    # /genus/<genus_slug/
+    # /genus/<genus_slug>/
     url(r'^genus/(?P<genus_slug>[\w-]+)/$', views.genus_detail, name='genus_detail_url'),
-
+    
+    # /genus/<genus_slug>/add_content/
+    url(r'^genus/(?P<genus_slug>[\w-]+)/add_content/$', views.genus_add_content, name='genus_add_content_url'),
+    
     # /year/
     url(r'^year/$', views.year_list, name='year_list_url'),
     
