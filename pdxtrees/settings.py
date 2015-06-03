@@ -122,6 +122,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
