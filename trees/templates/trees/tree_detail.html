@@ -46,6 +46,8 @@
 						<li>{{c.get_workflow_status_display}}: {{c.title}} ({{c.mod_date}})</li>
 					{% endfor %}
 					</ul>
+				{% else %}
+					<p>No submissions received yet.</p>
 				{% endif %}
 				
 				<h2><a href="{% url 'trees:tree_add_content_url' tree.city_tree_id %}" class="pdxt-button">Add Content</a></h2>
