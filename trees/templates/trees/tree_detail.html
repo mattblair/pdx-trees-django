@@ -38,6 +38,16 @@
 		<div class="pdxt-sidebar-column">
 			
 			{% if user.is_authenticated %}
+				
+				<h2>Submitted Content</h2>
+				{% if related_content %}
+					<ul>
+					{% for c in related_content %}
+						<li>{{c.get_workflow_status_display}}: {{c.title}} ({{c.mod_date}})</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+				
 				<h2><a href="{% url 'trees:tree_add_content_url' tree.city_tree_id %}" class="pdxt-button">Add Content</a></h2>
 			{% endif %}
 			
@@ -106,6 +116,24 @@
 		</div>
 	</div>
 	
+	{% if related_content %}
+		<div class="pdxt-unified-row">
+			<div class="pdxt-single-column">
+				
+				<h2>Additional Information</h2>
+				{% for c in related_content %}
+					<div class="supplemental">
+						<h3>{{c.title}}</h3>
+						<h4>{{c.subtitle}}</h4>
+						<p>{{c.credit}}</p>
+						<div>
+							{{c.article_text|linebreaks}}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
 {% else %}
 
 	<p>No tree found with that id.</p>

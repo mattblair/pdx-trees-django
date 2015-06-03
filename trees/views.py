@@ -9,9 +9,10 @@ from django.db.models import Count, Max
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 
 
-from trees.models import NotableTree, TreeGenus
+from trees.models import NotableTree, TreeGenus, SupplementalContent
 from trees.utilities import trees_as_geojson
 
 from trees.forms import SupplementalContentForm
@@ -225,9 +226,16 @@ def tree_detail(request, treeid):
     Show details for a tree, including a map
     """
     tree = get_object_or_404(NotableTree, city_tree_id=treeid)
+    
+    # get content type of tree
+    tree_type = ContentType.objects.get_for_model(tree)
+    # use that content_type to fetch related content
+    related_content = SupplementalContent.objects.filter(content_type__pk=tree_type.id,object_id=tree.id)
+    
     context = {
         'tree': tree,
-        'geojson': trees_as_geojson([tree])
+        'geojson': trees_as_geojson([tree]),
+        'related_content': related_content
     }
     return render(request, 'trees/tree_detail.html', context)
 
