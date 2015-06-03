@@ -6741,9 +6741,12 @@ button.close {
   text-decoration: none;
   text-align: center;
   padding: .2em .6em;
-  color: #b9d5c0;
+  color: #ffffff;
   background-color: #5d986a;
   margin: 4px 4px 4px 0px;
+}
+.pdxt-button a:hover {
+  color: #b9d5c0;
 }
 .errorlist li {
   color: #f66;
@@ -6753,7 +6756,7 @@ button.close {
   width: 100%;
 }
 .tree-metadata {
-  background-color: #d9c66a;
+  background-color: #f8f5e4;
   margin-top: 15px;
   padding: 10px;
   width: 100%;
@@ -6766,7 +6769,7 @@ button.close {
 .ghost-tree-section {
   width: 100%;
   color: #ffffff;
-  background-color: #999999;
+  background-color: #888888;
   text-align: center;
   padding: 10px;
   margin: 10px 0px;
@@ -6779,7 +6782,7 @@ button.close {
 }
 .ghost-label {
   color: #ffffff;
-  background-color: #999999;
+  background-color: #888888;
   padding: 4px;
   margin: 10px;
 }
@@ -6789,6 +6792,17 @@ button.close {
   background-color: #b9d5c0;
   color: #a77c51;
   line-height: 1.4em;
+}
+.supplemental {
+  background-color: #f8f5e4;
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .supplemental {
+    margin-top: 25px;
+  }
 }
 #map {
   height: 200px;
