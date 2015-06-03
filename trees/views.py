@@ -125,7 +125,8 @@ def genus_detail(request, genus_slug):
     
     genus = get_object_or_404(TreeGenus, slug=genus_slug)
     
-    genus_menu_list = TreeGenus.objects.filter(display_in_menu=True)
+    #genus_menu_list = TreeGenus.objects.filter(display_in_menu=True)
+    genus_menu_list = TreeGenus.objects.all()
     
     genus_type = ContentType.objects.get_for_model(genus)
     

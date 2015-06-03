@@ -22,12 +22,13 @@
 		<h2>Genus Detail</h2>
 		
 		<p>Other Common Genera in the Collection (navigation)</p>
-
+		{% comment %}
 		<ul class="list-inline">
 			{% for g in genus_menu_list %}
 				<li><a href="{{g.get_absolute_url}}">{{g.common_name}}</a></li>
 			{% endfor %}
 		</ul>
+		{% endcomment %}
 		
 	</div>
 </div>
@@ -36,6 +37,12 @@
 	<div class="pdxt-split-row">
 		<div class="pdxt-left-column">
 			<div id="map"></div>
+			<h4>All Genera</h4>
+			<ul>
+				{% for g in genus_menu_list %}
+					<li><a href="{{g.get_absolute_url}}">{{g.genus_name}} ({{g.common_name}})</a></li>
+				{% endfor %}
+			</ul>
 		</div>
 		<div class="pdxt-right-column">
 			
