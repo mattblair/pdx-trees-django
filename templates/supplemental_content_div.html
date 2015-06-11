@@ -1,0 +1,13 @@
+<div class="supplemental">
+	<h3>{{c.title}}</h3>
+	<h4>{{c.subtitle}}</h4>
+	<p>{{c.credit}}</p>
+	{% if c.workflow_status != "a" %}
+		<p class="workflow-tag">
+			{{c.get_workflow_status_display}}
+		</p>
+	{% endif %}
+	<div>
+		{{c.article_text|linebreaks}}
+	</div>
+</div>
