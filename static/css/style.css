@@ -6804,6 +6804,11 @@ button.close {
     margin-top: 25px;
   }
 }
+.workflow-tag {
+  color: #b9d5c0;
+  background-color: #4a3823;
+  padding: 5px;
+}
 #map {
   height: 200px;
   width: 320px;
