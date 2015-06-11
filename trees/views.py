@@ -241,10 +241,19 @@ def tree_detail(request, treeid):
     # use that content_type to fetch related content
     related_content = SupplementalContent.objects.filter(content_type__pk=tree_type.id,object_id=tree.id)
     
+    # and do the same for genus
+    genus_type = ContentType.objects.get_for_model(tree.genus)
+    
+    genus_related_content = SupplementalContent.objects.filter(
+        content_type__pk=genus_type.id,
+        object_id=tree.genus.id
+    )
+    
     context = {
         'tree': tree,
         'geojson': trees_as_geojson([tree]),
-        'related_content': related_content
+        'related_content': related_content,
+        'genus_related_content': genus_related_content
     }
     return render(request, 'trees/tree_detail.html', context)
 

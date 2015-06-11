@@ -118,11 +118,57 @@
 		</div>
 	</div>
 	
-	{% if related_content %}
+	{% if genus_related_content and related_content %}
+		<div class="pdxt-split-row">
+			<div class="pdxt-left-column">
+				<h2>About This Tree</h2>
+				{% for c in related_content %}
+					<div class="supplemental">
+						<h3>{{c.title}}</h3>
+						<h4>{{c.subtitle}}</h4>
+						<p>{{c.credit}}</p>
+						<div>
+							{{c.article_text|linebreaks}}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="pdxt-right-column">
+				<h2>About This Genus</h2>
+				{% for c in genus_related_content %}
+					<div class="supplemental">
+						<h3>{{c.title}}</h3>
+						<h4>{{c.subtitle}}</h4>
+						<p>{{c.credit}}</p>
+						<div>
+							{{c.article_text|linebreaks}}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		
+	{% elif genus_related_content %}
+		<div class="pdxt-unified-row">
+			<div class="pdxt-single-column">
+				<h2>About This Genus</h2>
+				{% for c in genus_related_content %}
+					<div class="supplemental">
+						<h3>{{c.title}}</h3>
+						<h4>{{c.subtitle}}</h4>
+						<p>{{c.credit}}</p>
+						<div>
+							{{c.article_text|linebreaks}}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	{% elif related_content %}
 		<div class="pdxt-unified-row">
 			<div class="pdxt-single-column">
 				
-				<h2>Additional Information</h2>
+				<h2>About This Tree</h2>
 				{% for c in related_content %}
 					<div class="supplemental">
 						<h3>{{c.title}}</h3>
