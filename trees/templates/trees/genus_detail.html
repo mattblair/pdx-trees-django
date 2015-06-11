@@ -77,14 +77,7 @@
 				
 				<h2>About This Genus</h2>
 				{% for c in related_content %}
-					<div class="supplemental">
-						<h3>{{c.title}}</h3>
-						<h4>{{c.subtitle}}</h4>
-						<p>{{c.credit}}</p>
-						<div>
-							{{c.article_text|linebreaks}}
-						</div>
-					</div>
+					{% supplemental_div c %}
 				{% endfor %}
 			</div>
 		</div>

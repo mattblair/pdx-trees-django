@@ -38,3 +38,13 @@ def map_div_js(context, center_latitude, center_longitude, zoom_level, map_div_i
         'center_longitude': center_longitude,
         'map_div_id': map_div_id
     }
+
+
+@register.inclusion_tag('supplemental_content_div.html')
+def supplemental_div(content):
+    """
+    Standardize supplemental content listings
+    
+    Might not be possible if genus and tree content diverge
+    """
+    return {'c': content}
